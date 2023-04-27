@@ -1,0 +1,35 @@
+ 
+{
+    "manifest_version": 3,
+    "name": "My First Extension",
+    "version": "1.0",
+    "description": "A simple Chrome extension.",
+    "icons": {
+      "48": "icon.png"
+    },
+    "background": {
+        "service_worker": "serviceWorker.js",
+        "type": "module"
+      },
+    "permissions": ["activeTab", "scripting", "tabs", "contextMenus"],
+
+    "host_permissions": [
+        "https://*/*",
+        "<all_urls>"
+    ],
+    "content_scripts": [
+        {
+          "js": ["contentScript.js"],
+          "matches": [
+            "https://*/*",
+            "<all_urls>"
+          ]
+        }
+    ],
+      
+
+    "action": {
+      "default_icon": "icon.png",
+      "default_popup": "popup.html"
+    }
+  }
