@@ -7,8 +7,27 @@ port.onMessage.addListener((message) => {
 });
 
 let currentUrl = window.location.href;
+
 //----ChatGPT disable auto scroll
 if (currentUrl.includes("openai")) {
+    document.addEventListener('DOMContentLoaded', () => {
+        removeTags();
+        //----Handle DOM updates
+        const targetNode = document.querySelector('div[class="flex-1 overflow-hidden"]');
+        const observer = new MutationObserver((mutationsList, observer) => {
+            //----Remove the hidden property from main
+            console.log('mutation observed');
+            setTimeout(()=> {
+                let mainElement = document.querySelector('div[class="flex-1 overflow-hidden"]');
+                if(mainElement)mainElement.style.overflowY='auto';
+            },200);
+            
+        });
+        if(targetNode)observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
+    });    
+}
+
+function removeTags() {
     //----Remove the 2 header elements
     let metaElement = document.querySelector('meta[name*="react-scroll"]');
     let styleElement = document.querySelector('style[data-emotion]');
@@ -20,19 +39,6 @@ if (currentUrl.includes("openai")) {
     //----Make the inputbar fixed
     let searchElement = document.querySelector('.absolute.bottom-0');
     if(searchElement)searchElement.style.position="fixed";
-
-    //----Handle DOM updates
-    const targetNode = document.querySelector('div[class="flex-1 overflow-hidden"]');
-    const observer = new MutationObserver((mutationsList, observer) => {
-        //----Remove the hidden property from main
-        console.log('mutation observed');
-        setTimeout(()=> {
-            let mainElement = document.querySelector('div[class="flex-1 overflow-hidden"]');
-            if(mainElement)mainElement.style.overflowY='auto';
-        },200);
-        
-    });
-    if(targetNode)observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
 }
 
 

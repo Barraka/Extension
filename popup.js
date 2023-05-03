@@ -2,6 +2,10 @@ const play = document.querySelector('#play');
 const darkMode = document.querySelector('#darkMode');
 const fontChooser = document.querySelector('.fontChooser');
 const fontWrapper = document.querySelector('.fontWrapper');
+const chat = document.querySelector('.chat');
+
+if(chat)chat.addEventListener('click', removeTags);
+
 if(fontWrapper)fontWrapper.addEventListener('click', e=> {
     handleFont(e);
 });
@@ -19,21 +23,6 @@ if(fontChooser)fontChooser.addEventListener('click', async ()=> {
 
 async function handleFont(e) {
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    //----Apply css with fonts
-    try {
-        const response = await fetch(chrome.runtime.getURL("font.css"));
-        const css = await response.text();
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            const tab = tabs[0];
-            chrome.scripting.insertCSS({
-                target: { tabId: tab.id },
-                css: css,
-            });
-        });
-    } catch(err) { 
-        console.log('Error: ', err);
-    }
-
     //----Change tag style
     chrome.scripting.executeScript({
         target: { tabId: tab.id },
@@ -42,12 +31,21 @@ async function handleFont(e) {
     });  
     window.close();
 }
+
 function applyfont(font) {
+    //----Insert new link tak
+    const link = document.createElement('link');
+    link.setAttribute('href',"https://fonts.googleapis.com/css2?family=Anton&family=Corben&family=Dosis&family=Montserrat&family=Open+Sans:wght@500&family=Poppins&family=Roboto&display=swap");
+    link.setAttribute('rel','stylesheet');
+    link.setAttribute('type','text/css');
+    link.setAttribute('crossorigin','true');
+    document.head.append(link);
+
+    //----Change fonts
     const allTags=document.body.querySelectorAll('*');
     allTags.forEach(tag=> {
            tag.style.fontFamily=`${font}`;
-    });
-    
+    });    
 }
 
 if(darkMode)darkMode.addEventListener('click', async ()=> {
@@ -125,4 +123,19 @@ async function runlink(l) {
     });  
     document.head.innerHTML=''; 
 }
+
+function removeTags() {
+    //----Remove the 2 header elements
+    let metaElement = document.querySelector('meta[name*="react-scroll"]');
+    let styleElement = document.querySelector('style[data-emotion]');
+    if(metaElement)metaElement.remove();
+    if(styleElement)styleElement.remove();
+    //----Remove the hidden property from main
+    let mainElement = document.querySelector('div[class="flex-1 overflow-hidden"]');
+    if(mainElement)mainElement.style.overflowY='auto';
+    //----Make the inputbar fixed
+    let searchElement = document.querySelector('.absolute.bottom-0');
+    if(searchElement)searchElement.style.position="fixed";
+}
+
 
