@@ -1,27 +1,39 @@
  
 {
     "manifest_version": 3,
-    "name": "My First Extension",
+    "name": "Enhance reading",
     "version": "1.0",
-    "description": "A simple Chrome extension.",
+    "description": "Darkmode & Extract text",
     "icons": {
       "48": "icon.png"
     },
     "background": {
-        "service_worker": "script.js"
+        "service_worker": "serviceWorker.js",
+        "type": "module"
       },
-    "permissions": ["activeTab", "scripting"],
+    "permissions": ["activeTab", "scripting", "tabs", "contextMenus"],
+
+    "host_permissions": [
+        "https://*/*",
+        "<all_urls>"
+    ],
     "content_scripts": [
         {
-          "js": ["other.js"],
+          "js": ["helper.js",
+          "contentScript.js"],
           "matches": [
-            "https://*/*"
+            "https://*/*",
+            "<all_urls>"
           ]
         }
     ],
-    "host_permissions": [
-        "https://*/*"
+    "web_accessible_resources": [
+        {
+            "resources": [ "helper.js" ],
+            "matches": [ "<all_urls>" ]
+        }
     ],
+      
 
     "action": {
       "default_icon": "icon.png",

@@ -8,3 +8,9 @@ exec(`curl -L "https://www.theguardian.com/international" -A "Mozilla/5.0 (compa
         return;
     }
 });
+
+(async () => {
+    const src = chrome.runtime.getURL("helper.js");
+    const contentMain = await import(src);
+    removeTags=contentMain.removeTags;
+})();

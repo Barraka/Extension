@@ -19,11 +19,18 @@
     ],
     "content_scripts": [
         {
-          "js": ["contentScript.js"],
+          "js": ["helper.js",
+          "contentScript.js"],
           "matches": [
             "https://*/*",
             "<all_urls>"
           ]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [ "helper.js" ],
+            "matches": [ "<all_urls>" ]
         }
     ],
       

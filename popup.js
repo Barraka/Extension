@@ -1,10 +1,12 @@
+
 const play = document.querySelector('#play');
 const darkMode = document.querySelector('#darkMode');
 const fontChooser = document.querySelector('.fontChooser');
 const fontWrapper = document.querySelector('.fontWrapper');
-const chat = document.querySelector('.chat');
+const chatWrapper = document.querySelector('.chatWrapper');
 
-if(chat)chat.addEventListener('click', removeTags);
+if(chatWrapper)chatWrapper.addEventListener('click', handleChat);
+
 
 if(fontWrapper)fontWrapper.addEventListener('click', e=> {
     handleFont(e);
@@ -20,6 +22,15 @@ if(fontChooser)fontChooser.addEventListener('click', async ()=> {
         fontWrapper.classList.add('hidden');
     }
 });
+
+async function handleChat(e) {
+    let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        function: removeTags,
+    });  
+    window.close();
+}
 
 async function handleFont(e) {
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -136,6 +147,22 @@ function removeTags() {
     //----Make the inputbar fixed
     let searchElement = document.querySelector('.absolute.bottom-0');
     if(searchElement)searchElement.style.position="fixed";
+    //----Add styling to input bar
+    const inputBar=document.querySelector('main form');
+    if(inputBar) {
+        inputBar.style.borderRadius="8px";
+        inputBar.style.cursor="pointer";
+        inputBar.addEventListener('click', e=> {
+            inputBar.querySelector('textarea').focus();
+        });
+        inputBar.querySelector('textarea').style.padding='4px 2px';
+        inputBar.querySelector('textarea').style.fontSize='1.2rem';
+        inputBar.addEventListener('mouseover', e=> {
+            inputBar.style.outline="2px solid cyan";
+        });
+        inputBar.addEventListener('mouseout', e=> {
+            inputBar.style.outline="none";
+        });
+    }
 }
-
 
